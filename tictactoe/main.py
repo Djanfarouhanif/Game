@@ -8,10 +8,6 @@ def afficher_grille(gri):
 def initialiser_grille():
     return [[" " for _ in range(3)] for _ in range(3)]
 
-# Initializer la grille
-grille = initialiser_grille()
-
-afficher_grille(grille)
 
 #Postion de jouer 
 def demander_position_joueur(joueur):
@@ -33,7 +29,44 @@ def jouer_tour(grille, joueur):
         print("Case déja occupé. Choisisszer une autre case.")
         jouer_tour(grille, joueur)
 
-#Exécution du tour de jeu pour un joueur
-joueur_actuel = "X"
-jouer_tour(grille, joueur_actuel)
-afficher_grille(grille)
+
+def verifier_victoire(grille,joueur):
+    #Vérifier les lignes
+    for ligne in grille:
+        if all([case == joueur for case in ligne]):
+            return True
+
+    #Vérifier les colnnes
+    for col in range(3):
+        if all([grille[ligne][col] == joueur for ligne in range(3)]):
+            return True
+
+    #Vérifier les diagonales
+    if all([grille[i][i] == joueur for i in range(3)]) or all([grille[i][2 - 1] == joueur for i in range(3)]):
+        return True
+
+    return False
+
+def verifier_egalite(grille):
+    return all([case !=  " "  for ligne in grille for case in ligne])
+
+def boucle_principale_du_jeu():
+    grille = initialiser_grille()
+    joueur_actuel = "X"
+
+    while True:
+        afficher_grille(grille)
+        jouer_tour(grille, joueur_actuel)
+        if verifier_victoire(grille, joueur_actuel):
+            afficher_grille(grille)
+            print(f"Félicitations, Joueur {joueur_actuel } a gagné")
+            break
+
+        if verifier_egalite(grille):
+            afficher_grille(grille)
+            print("Match nul !")
+            break
+        #Alterner entre les joueurs
+        joueur_actuel = "O" if joueur_actuel == "X" else "X"
+boucle_principale_du_jeu()
+    
